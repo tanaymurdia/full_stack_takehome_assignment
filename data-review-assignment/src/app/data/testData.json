@@ -1,23 +1,27 @@
 {
   "records": [
     {
-      "id": "1",
+      "id": 1,
       "name": "John Doe",
-      "email": "john@example.com",
+      "email": "john.doe@example.com",
       "street": "123 Main St",
-      "city": "Anytown",
+      "city": "New York",
       "zipcode": "12345",
-      "phone": "555-0123",
-      "status": "Active",
+      "phone": "123-456-7890",
+      "status": "active",
       "errors": {
-        "email": {
-          "message": "Invalid email format",
+        "phone": {
+          "message": "Invalid phone format",
           "severity": "critical"
+        },
+        "zipcode": {
+          "message": "Invalid zipcode",
+          "severity": "warning"
         }
       }
     },
     {
-      "id": "2",
+      "id": 2,
       "name": "Jane Smith",
       "email": "jane.smith@sample",
       "street": "456 Elm St",
@@ -37,7 +41,7 @@
       }
     },
     {
-      "id": "3",
+      "id": 3,
       "name": "Alice Johnson",
       "email": "alice.johnson@example.com",
       "street": "",
@@ -53,4 +57,4 @@
       }
     }
   ]
-} 
+}
