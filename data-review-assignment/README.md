@@ -7,10 +7,11 @@ You can run it on the local server, by cloning this repo and run the following c
 
 ```bash
 cd data-review-assignment
+npm install
 npm run dev
 ```
 
-Once the server is up and running, open [http://localhost:3000](http://localhost:3000) in your favorite browser to see DataSense in action! 🚀
+Once the server is up and running, open [http://localhost:3000](http://localhost:3000) in your favorite browser to see DataSense in action!
 
 ### Approach and Assumptions
 
