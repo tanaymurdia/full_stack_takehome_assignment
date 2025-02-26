@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from 'react';
-import { colors } from '@/app/constants/theme';
 import { commonStyles } from '@/app/constants/theme';
 
 type ExportButtonProps = {

@@ -1,43 +1,12 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { Tooltip } from 'react-tooltip';
-import Modal from 'react-modal';
 import { Record, SortConfig, SortDirection } from '@/app/types/data';
 import { TableHeader } from './TableHeader';
 import { TableRow } from './TableRow';
 import RecordModal from '../modals/RecordModal';
 import { commonStyles } from '@/app/constants/theme';
 import { exportToCSV } from '@/app/utils/csvExport';
-
-type Error = {
-  message: string;
-  severity: 'critical' | 'warning' | 'valid';
-};
-
-const severityColor: { [key: string]: string } = {
-  critical: 'bg-red-900/20 text-red-400 border-red-500/30',
-  warning: 'bg-amber-900/20 text-amber-400 border-amber-500/30',
-  valid: 'bg-emerald-900/20 text-emerald-400 border-emerald-500/30',
-};
-
-const severityIcon: { [key: string]: React.ReactElement } = {
-  critical: (
-    <svg className="w-5 h-5 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-    </svg>
-  ),
-  warning: (
-    <svg className="w-5 h-5 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-    </svg>
-  ),
-  valid: (
-    <svg className="w-5 h-5 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-    </svg>
-  ),
-};
 
 const SortIcon = ({ direction }: { direction: SortDirection }) => {
   if (direction === 'none') {
@@ -155,16 +124,6 @@ const Table = () => {
     setModalIsOpen(true);
   };
 
-  const getErrorCount = (record: Record) => {
-    return Object.values(record.errors).reduce(
-      (acc, curr) => ({
-        critical: acc.critical + (curr.severity === 'critical' ? 1 : 0),
-        warning: acc.warning + (curr.severity === 'warning' ? 1 : 0),
-      }),
-      { critical: 0, warning: 0 }
-    );
-  };
-
   const handleSort = (column: string) => {
     setSortConfig(prevConfig => {
       if (prevConfig.column === column) {
@@ -251,7 +210,6 @@ const Table = () => {
                       record={record}
                       index={index}
                       onOpenModal={openRecordModal}
-                      isLastRow={index === filteredData.length - 1}
                     />
                   ))
                 )}

@@ -7,7 +7,7 @@ import { commonStyles } from '@/app/constants/theme';
 type FilterOption = {
   value: string;
   label: string;
-  icon: JSX.Element;
+  icon: React.ReactNode;
   color: string;
 };
 

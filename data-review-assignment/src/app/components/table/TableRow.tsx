@@ -10,10 +10,9 @@ type TableRowProps = {
   record: Record;
   index: number;
   onOpenModal: (record: Record) => void;
-  isLastRow?: boolean;
 };
 
-export const TableRow = ({ record, index, onOpenModal, isLastRow }: TableRowProps) => {
+export const TableRow = ({ record, index, onOpenModal }: TableRowProps) => {
   const getErrorCount = (record: Record) => {
     return Object.values(record.errors).reduce(
       (acc, curr) => ({
@@ -43,7 +42,7 @@ export const TableRow = ({ record, index, onOpenModal, isLastRow }: TableRowProp
     return null;
   };
 
-  const getCellStyle = (key: string, isFirstCell: boolean, isLastCell: boolean) => {
+  const getCellStyle = (key: string) => {
     const baseStyle = record.errors[key] 
       ? `${severityStyles[record.errors[key].severity]} cursor-help border`
       : `${fieldValidityStyle} border`;
@@ -67,11 +66,11 @@ export const TableRow = ({ record, index, onOpenModal, isLastRow }: TableRowProp
         className="hover:bg-white/5 transition-colors duration-200 ease-in-out animate-fade-in group"
         style={{ animationDelay: `${index * 100}ms` }}
       >
-        {cells.map(([key, value], cellIndex) => (
+        {cells.map(([key, value]) => (
           <td 
             key={key}
             className={`${commonStyles.table.cell} ${
-              getCellStyle(key, cellIndex === 0, cellIndex === cells.length - 1)
+              getCellStyle(key)
             }`}
           >
             {record.errors[key] ? (
