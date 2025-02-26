@@ -1,0 +1,273 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: #000000;
+}
+
+.container {
+  width: 100vw;
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.content-wrapper {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.table-wrapper {
+  position: relative;
+  width: 100%;
+  margin: 0 auto;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+}
+
+.data-table {
+  width: 100%;
+  min-width: 900px; /* Reduced from 1200px for better mobile view */
+  table-layout: fixed;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+/* Add cell styles for better content handling */
+.table-cell {
+  @apply px-6 py-4 text-sm;
+  min-width: 120px;
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Add padding for cells with errors */
+.table-cell[data-has-error="true"] {
+  padding-right: 3rem; /* 48px */
+}
+
+/* Responsive column widths */
+.col-name { width: 140px; }
+.col-email { width: 180px; }
+.col-street { width: 180px; }
+.col-city { width: 100px; }
+.col-zipcode { width: 90px; }
+.col-phone { width: 120px; }
+.col-status { width: 90px; }
+.col-actions { width: 140px; }
+
+/* Add responsive breakpoints */
+@media (max-width: 1024px) {
+  .data-table {
+    min-width: 800px;
+  }
+  
+  .col-name { width: 120px; }
+  .col-email { width: 160px; }
+  .col-street { width: 160px; }
+  .col-city { width: 90px; }
+  .col-zipcode { width: 80px; }
+  .col-phone { width: 110px; }
+  .col-status { width: 80px; }
+  .col-actions { width: 130px; }
+}
+
+@media (max-width: 768px) {
+  .data-table {
+    min-width: 700px;
+  }
+
+  .col-name { width: 110px; }
+  .col-email { width: 140px; }
+  .col-street { width: 140px; }
+  .col-city { width: 80px; }
+  .col-zipcode { width: 70px; }
+  .col-phone { width: 100px; }
+  .col-status { width: 70px; }
+  .col-actions { width: 120px; }
+}
+
+.modal-overlay {
+  z-index: 50;
+}
+
+.circle-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  transform: translateY(-10vh);
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  z-index: 0;
+}
+
+.circle {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  mix-blend-mode: screen;
+  background-image: radial-gradient(
+    hsl(220, 60%, 60%),
+    hsl(220, 60%, 60%) 10%,
+    hsla(220, 60%, 60%, 0) 56%
+  );
+  opacity: 0.3;
+  animation: fade-frames 200ms infinite, scale-frames 2s infinite;
+}
+
+@keyframes fade-frames {
+  0% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.2;
+  }
+  100% {
+    opacity: 0.3;
+  }
+}
+
+@keyframes scale-frames {
+  0% {
+    transform: scale3d(0.6, 0.6, 1);
+  }
+  50% {
+    transform: scale3d(1.4, 1.4, 1);
+  }
+  100% {
+    transform: scale3d(0.6, 0.6, 1);
+  }
+}
+
+/* More varied circle sizes and animations */
+.circle-container:nth-child(1) { width: 15px; height: 15px; animation: move-frames-1 28s infinite; animation-delay: 0s; }
+.circle-container:nth-child(2) { width: 20px; height: 20px; animation: move-frames-2 35s infinite; animation-delay: 1s; }
+.circle-container:nth-child(3) { width: 18px; height: 18px; animation: move-frames-3 30s infinite; animation-delay: 2s; }
+.circle-container:nth-child(4) { width: 22px; height: 22px; animation: move-frames-4 32s infinite; animation-delay: 3s; }
+.circle-container:nth-child(5) { width: 14px; height: 14px; animation: move-frames-5 29s infinite; animation-delay: 4s; }
+.circle-container:nth-child(6) { width: 19px; height: 19px; animation: move-frames-6 33s infinite; animation-delay: 5s; }
+.circle-container:nth-child(7) { width: 16px; height: 16px; animation: move-frames-7 31s infinite; animation-delay: 6s; }
+.circle-container:nth-child(8) { width: 21px; height: 21px; animation: move-frames-8 34s infinite; animation-delay: 7s; }
+.circle-container:nth-child(9) { width: 17px; height: 17px; animation: move-frames-9 27s infinite; animation-delay: 8s; }
+.circle-container:nth-child(10) { width: 23px; height: 23px; animation: move-frames-10 36s infinite; animation-delay: 9s; }
+
+/* More varied movement patterns */
+@keyframes move-frames-1 {
+  from { transform: translate3d(10vw, 115vh, 0); }
+  to { transform: translate3d(85vw, -15vh, 0); }
+}
+
+@keyframes move-frames-2 {
+  from { transform: translate3d(30vw, 120vh, 0); }
+  to { transform: translate3d(15vw, -20vh, 0); }
+}
+
+@keyframes move-frames-3 {
+  from { transform: translate3d(50vw, 110vh, 0); }
+  to { transform: translate3d(95vw, -25vh, 0); }
+}
+
+@keyframes move-frames-4 {
+  from { transform: translate3d(70vw, 125vh, 0); }
+  to { transform: translate3d(25vw, -10vh, 0); }
+}
+
+@keyframes move-frames-5 {
+  from { transform: translate3d(90vw, 115vh, 0); }
+  to { transform: translate3d(45vw, -30vh, 0); }
+}
+
+@keyframes move-frames-6 {
+  from { transform: translate3d(20vw, 120vh, 0); }
+  to { transform: translate3d(75vw, -20vh, 0); }
+}
+
+@keyframes move-frames-7 {
+  from { transform: translate3d(40vw, 110vh, 0); }
+  to { transform: translate3d(65vw, -15vh, 0); }
+}
+
+@keyframes move-frames-8 {
+  from { transform: translate3d(60vw, 125vh, 0); }
+  to { transform: translate3d(35vw, -25vh, 0); }
+}
+
+@keyframes move-frames-9 {
+  from { transform: translate3d(80vw, 115vh, 0); }
+  to { transform: translate3d(55vw, -30vh, 0); }
+}
+
+@keyframes move-frames-10 {
+  from { transform: translate3d(100vw, 120vh, 0); }
+  to { transform: translate3d(5vw, -20vh, 0); }
+}
+
+.message {
+  position: absolute;
+  right: 20px;
+  bottom: 10px;
+  color: white;
+  font-family: var(--font-geist-sans);
+  line-height: 27px;
+  font-size: 18px;
+  text-align: right;
+  pointer-events: none;
+  animation: message-frames 1.5s ease 5s forwards;
+  opacity: 0;
+}
+
+@keyframes message-frames {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@layer utilities {
+  /* ... existing utilities ... */
+}
+
+/* Scrollbar styles */
+.table-container::-webkit-scrollbar {
+  height: 6px;
+}
+
+.table-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.table-container::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+.table-container {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+}
