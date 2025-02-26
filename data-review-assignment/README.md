@@ -7,6 +7,7 @@ You can run it on the local server, by cloning this repo and run the following c
 
 ```bash
 cd data-review-assignment
+npm install
 npm run dev
 ```
 
