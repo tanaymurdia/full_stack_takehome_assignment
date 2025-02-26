@@ -11,7 +11,7 @@ npm install
 npm run dev
 ```
 
-Once the server is up and running, open [http://localhost:3000](http://localhost:3000) in your favorite browser to see DataSense in action! 🚀
+Once the server is up and running, open [http://localhost:3000](http://localhost:3000) in your favorite browser to see DataSense in action!
 
 ### Approach and Assumptions
 
