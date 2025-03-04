@@ -1,28 +1,20 @@
 "use client";
 
 import React from 'react';
-import { Record } from '@/app/types/data';
-import { severityStyles } from '@/app/constants/theme';
-import { CriticalIcon, WarningIcon, ValidIcon } from '../icons/SeverityIcons';
+import { Record } from '@/app/types';
 import Modal from 'react-modal';
+import { Card, Icon } from '@/app/components/ui';
+
+// Helper function to convert severity to Icon type
+const severityToIconType = (severity: string): 'critical' | 'warning' | 'valid' => {
+  return severity === 'critical' ? 'critical' :
+         severity === 'warning' ? 'warning' : 'valid';
+};
 
 type RecordModalProps = {
   isOpen: boolean;
   onClose: () => void;
   record: Record | null;
-};
-
-const getIcon = (severity: string) => {
-  switch (severity) {
-    case 'critical':
-      return <CriticalIcon />;
-    case 'warning':
-      return <WarningIcon />;
-    case 'valid':
-      return <ValidIcon />;
-    default:
-      return null;
-  }
 };
 
 const RecordModal = ({ isOpen, onClose, record }: RecordModalProps) => {
@@ -69,27 +61,22 @@ const RecordModal = ({ isOpen, onClose, record }: RecordModalProps) => {
             onClick={onClose}
             className="p-1 rounded-lg hover:bg-white/5 text-gray-400 hover:text-white transition-colors"
           >
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
+            <Icon type="close" size="sm" />
           </button>
         </div>
 
         {/* Error List */}
         <div className="mt-6 space-y-4">
           {Object.entries(record.errors).map(([field, error]) => (
-            <div
+            <Card
               key={field}
-              className={`
-                p-4 rounded-xl
-                ${severityStyles[error.severity]}
-                border border-white/20
-                backdrop-blur-sm
-              `}
+              variant={error.severity === 'critical' ? 'error' : error.severity === 'warning' ? 'warning' : 'success'}
+              size="sm"
+              className="backdrop-blur-sm border border-white/20"
             >
               <div className="flex items-start gap-3">
                 <div className="mt-0.5">
-                  {getIcon(error.severity)}
+                  <Icon type={severityToIconType(error.severity)} size="md" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-3">
@@ -108,7 +95,7 @@ const RecordModal = ({ isOpen, onClose, record }: RecordModalProps) => {
                   </p>
                 </div>
               </div>
-            </div>
+            </Card>
           ))}
         </div>
       </div>

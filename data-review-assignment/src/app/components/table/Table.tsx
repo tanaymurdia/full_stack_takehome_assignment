@@ -1,32 +1,15 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import { Record, SortConfig, SortDirection } from '@/app/types/data';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Record, SortConfig, SortDirection } from '@/app/types';
 import { TableHeader } from './TableHeader';
 import { TableRow } from './TableRow';
 import RecordModal from '../modals/RecordModal';
 import { commonStyles } from '@/app/constants/theme';
 import { exportToCSV } from '@/app/utils/csvExport';
-
-const SortIcon = ({ direction }: { direction: SortDirection }) => {
-  if (direction === 'none') {
-    return (
-      <svg className="w-4 h-4 opacity-0 group-hover:opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
-      </svg>
-    );
-  }
-  
-  return direction === 'asc' ? (
-    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
-    </svg>
-  ) : (
-    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-    </svg>
-  );
-};
+import { Card } from '@/app/components/ui';
+import { SortIcon } from './SortIcon';
+import { filterRecordsByStatus, sortRecords } from './tableUtils';
 
 const Table = () => {
   const [data, setData] = useState<Record[]>([]);
@@ -40,27 +23,40 @@ const Table = () => {
     direction: 'none'
   });
 
+  const filterAndSortData = useCallback(() => {
+    if (!data || data.length === 0) {
+      setFilteredData([]);
+      return;
+    }
+
+    // Apply status filtering
+    let result = filterRecordsByStatus(data, severityFilter);
+    
+    // Apply sorting if a column is selected
+    if (sortConfig.column && sortConfig.direction !== 'none') {
+      result = sortRecords(result, sortConfig);
+    }
+
+    setFilteredData(result);
+  }, [data, severityFilter, sortConfig]);
+
   useEffect(() => {
     fetchData();
   }, []);
 
   useEffect(() => {
     filterAndSortData();
-  }, [data, severityFilter, sortConfig]);
+  }, [filterAndSortData]);
 
   const fetchData = async () => {
     try {
-      console.log('Fetching data...');
       const response = await fetch('/api/data');
-      
-      console.log('Response status:', response.status);
       
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const result = await response.json();
-      console.log('Parsed result:', result);
       
       if (!result || !result.records) {
         throw new Error('Invalid data format');
@@ -73,46 +69,6 @@ const Table = () => {
     } finally {
       setLoading(false);
     }
-  };
-
-  const filterAndSortData = () => {
-    let result = [...data];
-
-    // Apply filters
-    if (severityFilter !== 'all') {
-      result = result.filter(record => {
-        const hasErrorWithSeverity = Object.values(record.errors).some(
-          error => error.severity === severityFilter
-        );
-        
-        if (severityFilter === 'valid') {
-          return Object.keys(record.errors).length === 0;
-        }
-        
-        return hasErrorWithSeverity;
-      });
-    }
-
-    if (sortConfig.column && sortConfig.direction !== 'none') {
-      result.sort((a, b) => {
-        const getSeverityLevel = (record: Record, column: string) => {
-          const error = record.errors[column];
-          if (!error) return 0;
-          return error.severity === 'critical' ? 2 : 1;
-        };
-
-        const aLevel = getSeverityLevel(a, sortConfig.column);
-        const bLevel = getSeverityLevel(b, sortConfig.column);
-
-        if (sortConfig.direction === 'asc') {
-          return aLevel - bLevel;
-        } else {
-          return bLevel - aLevel;
-        }
-      });
-    }
-
-    setFilteredData(result);
   };
 
   const handleExportCSV = () => {
@@ -154,14 +110,14 @@ const Table = () => {
 
   return (
     <>
-      <div className="bg-surface-mixed/20 backdrop-blur-xl rounded-3xl p-4 sm:p-6 lg:p-8 shadow-2xl transition-all duration-500 border border-white/10">
+      <Card size="lg">
         <TableHeader 
           onExport={handleExportCSV}
           onFilterChange={setSeverityFilter}
           selectedFilter={severityFilter}
         />
         <div className="table-wrapper">
-          <div className="table-container">
+          <div className={commonStyles.table.container}>
             <table className="data-table">
               <thead className="bg-black/50 sticky top-0 z-10">
                 <tr>
@@ -217,7 +173,7 @@ const Table = () => {
             </table>
           </div>
         </div>
-      </div>
+      </Card>
       <RecordModal
         isOpen={modalIsOpen}
         onClose={() => setModalIsOpen(false)}

@@ -1,10 +1,18 @@
 "use client";
 
-import { Record } from '@/app/types/data';
+import React from 'react';
+import { Record, Error } from '@/app/types';
 import { severityStyles, fieldValidityStyle } from '@/app/constants/theme';
-import { CriticalIcon, WarningIcon, ValidIcon } from '../icons/SeverityIcons';
 import { commonStyles } from '@/app/constants/theme';
 import * as Tooltip from '@radix-ui/react-tooltip';
+import { Icon } from '../ui/Icon';
+import { Button } from '../ui/Button';
+
+// Helper function to convert severity to Icon type
+const severityToIconType = (severity: string): 'critical' | 'warning' | 'valid' => {
+  return severity === 'critical' ? 'critical' :
+         severity === 'warning' ? 'warning' : 'valid';
+};
 
 type TableRowProps = {
   record: Record;
@@ -24,23 +32,6 @@ export const TableRow = ({ record, index, onOpenModal }: TableRowProps) => {
   };
 
   const errorCount = getErrorCount(record);
-
-  const renderIcon = (key: string) => {
-    if (record.errors[key]) {
-      const severity = record.errors[key].severity;
-      switch (severity) {
-        case 'critical':
-          return <CriticalIcon />;
-        case 'warning':
-          return <WarningIcon />;
-        case 'valid':
-          return <ValidIcon />;
-        default:
-          return null;
-      }
-    }
-    return null;
-  };
 
   const getCellStyle = (key: string) => {
     const baseStyle = record.errors[key] 
@@ -76,7 +67,10 @@ export const TableRow = ({ record, index, onOpenModal }: TableRowProps) => {
             {record.errors[key] ? (
               <Tooltip.Root>
                 <Tooltip.Trigger className="flex items-center gap-2 w-full">
-                  {renderIcon(key)}
+                  <Icon 
+                    type={severityToIconType(record.errors[key].severity)} 
+                    size="sm" 
+                  />
                   {key === 'status' ? (
                     <span className={`${commonStyles.table.statusBadge}
                       ${value === 'Active' 
@@ -111,7 +105,12 @@ export const TableRow = ({ record, index, onOpenModal }: TableRowProps) => {
               </Tooltip.Root>
             ) : (
               <div className="flex items-center gap-2">
-                {renderIcon(key)}
+                {record.errors[key] && (
+                  <Icon 
+                    type={severityToIconType((record.errors[key] as Error).severity)} 
+                    size="sm" 
+                  />
+                )}
                 {key === 'status' ? (
                   <span className={`${commonStyles.table.statusBadge}
                     ${value === 'Active' 
@@ -126,11 +125,12 @@ export const TableRow = ({ record, index, onOpenModal }: TableRowProps) => {
           </td>
         ))}
         <td className={`${commonStyles.table.cell} pr-16`}>
-          <button
+          <Button
+            variant="secondary"
             onClick={() => onOpenModal(record)}
-            className="px-6 py-2 text-xs bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition-colors flex items-center gap-3"
+            size="sm"
           >
-            <span>View Errors</span>
+            View Errors
             {errorCount.critical > 0 && (
               <span className="px-2 py-0.5 bg-red-500/20 text-red-400 rounded-full text-xs">
                 {errorCount.critical}
@@ -141,7 +141,7 @@ export const TableRow = ({ record, index, onOpenModal }: TableRowProps) => {
                 {errorCount.warning}
               </span>
             )}
-          </button>
+          </Button>
         </td>
       </tr>
     </Tooltip.Provider>

@@ -2,12 +2,16 @@
 
 import React, { useState } from 'react';
 import { colors } from '@/app/constants/theme';
-import { commonStyles } from '@/app/constants/theme';
+import { Button } from '../ui/Button';
+import { Icon } from '../ui/Icon';
+
+// Define a type for valid icon types
+type IconType = 'warning' | 'critical' | 'valid' | 'sort-asc' | 'sort-desc' | 'sort-none' | 'close' | 'arrow-right' | 'check' | 'filter';
 
 type FilterOption = {
   value: string;
   label: string;
-  icon: React.ReactNode;
+  iconType: IconType;
   color: string;
 };
 
@@ -23,41 +27,25 @@ export const FilterDropdown = ({ value, onChange }: FilterDropdownProps) => {
     {
       value: 'all',
       label: 'All Records',
-      icon: (
-        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-        </svg>
-      ),
+      iconType: 'filter',
       color: colors.surface.text,
     },
     {
       value: 'critical',
       label: 'Critical Errors',
-      icon: (
-        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-        </svg>
-      ),
+      iconType: 'critical',
       color: colors.critical.text,
     },
     {
       value: 'warning',
       label: 'Warnings',
-      icon: (
-        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-        </svg>
-      ),
+      iconType: 'warning',
       color: colors.warning.text,
     },
     {
       value: 'valid',
       label: 'Valid Records',
-      icon: (
-        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-        </svg>
-      ),
+      iconType: 'valid',
       color: colors.valid.text,
     },
   ];
@@ -66,24 +54,21 @@ export const FilterDropdown = ({ value, onChange }: FilterDropdownProps) => {
 
   return (
     <div className="relative">
-      <button
+      <Button
+        variant="action"
         onClick={() => setIsOpen(!isOpen)}
-        className={`
-          ${commonStyles.actionButton}
-          flex items-center justify-between
-          ${isOpen ? 'ring-2 ring-emerald-500/30' : ''}
-        `}
+        className={isOpen ? 'ring-2 ring-emerald-500/30' : ''}
       >
         <div className="flex items-center gap-2 min-w-[90px]">
-          <span className={selectedOption.color}>{selectedOption.icon}</span>
+          <span className={selectedOption.color}>
+            <Icon type={selectedOption.iconType} size="sm" />
+          </span>
           <span className="text-gray-300">{selectedOption.label}</span>
         </div>
         <span className={`transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}>
-          <svg className="w-4 h-4 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-          </svg>
+          <Icon type="filter" size="sm" className="opacity-50" />
         </span>
-      </button>
+      </Button>
 
       {isOpen && (
         <>
@@ -124,7 +109,7 @@ export const FilterDropdown = ({ value, onChange }: FilterDropdownProps) => {
                     group-hover:scale-110
                   `}
                 >
-                  {option.icon}
+                  <Icon type={option.iconType} size="sm" />
                 </span>
                 <span className="text-gray-300">{option.label}</span>
               </button>

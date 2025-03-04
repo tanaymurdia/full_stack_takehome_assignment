@@ -1,4 +1,4 @@
-import { Record } from '@/app/types/data';
+import { Record } from '@/app/types';
 
 export const exportToCSV = (data: Record[]) => {
   // Define headers with proper names
